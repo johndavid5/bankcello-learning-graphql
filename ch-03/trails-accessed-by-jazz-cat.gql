@@ -1,0 +1,9 @@
+query trailsAccessedByJazzCat {
+    Lift(id:"jazz-cat"){
+        capacity
+        trailAccess {
+            name
+            difficulty
+        }
+    }
+}

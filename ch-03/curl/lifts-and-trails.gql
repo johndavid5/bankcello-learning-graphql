@@ -1,0 +1,14 @@
+query liftsAndTrails {
+  openLifts: liftCount(status: OPEN)
+  closedLifts: liftCount(status: CLOSED)
+  allLifts: allLifts
+  { liftName: name
+    status
+  }
+  openTrails: trailCount(status: OPEN)
+  closedTrails: trailCount(status: CLOSED)
+  allTrails: allTrails
+  { trailName: name
+    difficulty
+  }
+}

@@ -1,0 +1,9 @@
+query liftToAccessTrail {
+    Trail(id:"dance-flight"){
+        groomed
+        accessedByLifts {
+            name
+            capacity
+        }
+    }
+}

@@ -1,0 +1,7 @@
+query closedLifts {
+  closedLifts: allLifts(status: CLOSED){
+   name
+   status
+  }
+}
+

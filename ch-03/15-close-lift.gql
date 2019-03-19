@@ -1,0 +1,6 @@
+mutation closeLift {
+    setLiftStatus( id: "astra-express" status: HOLD) {
+    name
+    status
+ }
+}

@@ -1,0 +1,18 @@
+query {
+    allTrails {
+        ...trailStatus
+        ...trailDetails
+    }
+}
+
+fragment trailStatus on Trail {
+    name 
+    status
+}
+
+fragment trailDetails on Trail {
+    groomed
+    trees
+    night
+}
+

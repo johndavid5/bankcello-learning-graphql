@@ -1,0 +1,3 @@
+REM From Copy CURL:
+REM curl 'http://snowtooth.moonhighway.com/' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://snowtooth.moonhighway.com' --data-binary '{"query":"query { allLifts { name status } }\n\n\n"}' --compressed
+curl -v "http://snowtooth.moonhighway.com/" -H "Accept-Encoding: gzip, deflate, br" -H "Content-Type: application/json" -H "Accept: application/json" -H "Connection: keep-alive" -H "DNT: 1" -H "Origin: http://snowtooth.moonhighway.com" --data-binary "{\"query\":\"query { allTrails { name difficulty } }\n\n\n\"}" --compressed 2>&1 | tee all-trails.out

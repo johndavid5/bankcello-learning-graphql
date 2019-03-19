@@ -1,0 +1,12 @@
+query LiftDetails {
+    __type(name: "Lift") {
+        name
+        fields {
+            name
+            description
+            type {
+                name
+            }
+        }
+    }
+}

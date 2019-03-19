@@ -1,0 +1,24 @@
+query {
+ Lift(id: "jazz-cat"){
+    name
+    status
+    capacity
+    night
+    elevationGain
+    trailAccess {
+      name
+      difficulty
+    }
+ }
+ Trail(id: "river-run"){
+   name
+   difficulty
+   accessedByLifts {
+     name
+     status
+     capacity
+     night
+     elevationGain
+   }
+ }
+}

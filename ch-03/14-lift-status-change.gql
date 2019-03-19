@@ -1,0 +1,7 @@
+subscription {
+    liftStatusChange {
+        name
+        capacity
+        status
+    }
+}

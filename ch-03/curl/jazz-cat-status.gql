@@ -1,0 +1,8 @@
+query jazzCatStatus {
+    allLifts(id: "jazz-cat"){
+        name
+        status
+        night
+        elevationGain
+    }
+}

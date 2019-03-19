@@ -1,0 +1,2 @@
+REM From Copy CURL:
+curl -v "http://snowtooth.moonhighway.com/" -H "Accept-Encoding: gzip, deflate, br" -H "Content-Type: application/json" -H "Accept: application/json" -H "Connection: keep-alive" -H "DNT: 1" -H "Origin: http://snowtooth.moonhighway.com" --data-binary "{\"query\":\"query closedLifts { allLifts(status: \"CLOSED\" sortBy: \"name\") { name status } }\n\n\n\"}" --compressed 2>&1 | tee all-lifts.out

@@ -1,0 +1,22 @@
+# Getting to know a new GraphQL API:
+# What fields are available on the root types...?
+query roots {
+    __schema {
+        queryType {
+            ...typeFields
+        }
+        mutationType {
+            ...typeFields
+        }
+        subscriptionType {
+            ...typeFields
+        }
+    }
+}
+
+fragment typeFields on __Type {
+    name
+    fields {
+        name
+    }
+}
