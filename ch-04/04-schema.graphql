@@ -1,0 +1,42 @@
+# type Query:
+# Define the queries available
+# in our API...
+
+type Query {
+    totalPhotos: Int!
+    allPhotos: [Photo!]!
+    totalUsers: Int!
+    allUsers: [User!]!
+}
+
+# Make our queries available in our GraphQL API.
+schema {
+    query: Query
+}
+
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}
+
+scalar DateTime
+
+type User {
+    githubLogin: ID!
+    name: String
+    avatar: String
+    postedPhotos: [Photo!]!
+}
+
+type Photo {
+    id: ID!
+    name: String!
+    url: String!
+    description: String
+    created: DateTime!
+    category: PhotoCategory
+    postedBy: User!
+}

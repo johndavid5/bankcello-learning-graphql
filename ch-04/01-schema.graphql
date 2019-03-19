@@ -1,0 +1,21 @@
+# `Enumeration` type or `enum`:
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}
+
+# Custom Scalar
+scalar DateTime
+
+type Photo {
+    id: ID!
+    name: String!
+    url: String!
+    description: String
+    created: DateTime!
+    category: PhotoCategory!
+}
+

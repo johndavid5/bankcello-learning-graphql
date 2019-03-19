@@ -1,0 +1,28 @@
+# One-to-one connection
+#  Photo ---postedBy--> User
+
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}
+
+scalar DateTime
+
+type User {
+    githubLogin: ID!
+    name: String
+    avatar: String
+}
+
+type Photo {
+    id: ID!
+    name: String!
+    url: String!
+    description: String
+    created: DateTime!
+    category: PhotoCategory
+    postedBy: User!
+}

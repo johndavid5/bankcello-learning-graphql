@@ -1,0 +1,32 @@
+# One-to-many connection
+#  Provide a path back from User types to Photo types 
+#
+#  When we query a User, we get to see all of the
+#  photos that particular user posted.
+#
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}
+
+scalar DateTime
+
+type User {
+    githubLogin: ID!
+    name: String
+    avatar: String
+    postedPhotos: [Photo!]!
+}
+
+type Photo {
+    id: ID!
+    name: String!
+    url: String!
+    description: String
+    created: DateTime!
+    category: PhotoCategory
+    postedBy: User!
+}
