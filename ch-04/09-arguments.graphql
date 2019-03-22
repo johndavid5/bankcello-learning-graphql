@@ -1,0 +1,27 @@
+type Query {
+    ...
+    # Here the arguments are required (non-nullable)...
+    User(githubLogin: ID!): User!
+    Photo(id: ID!): Photo!
+    # Here we filter the photo-list that is returned
+    # by the allPhotos query with an optional category
+    # enum...if category value is not set with the enum
+    # we can assume this field will return every photo...
+    allPhotos(category: PhotoCategory): [Photo!]!
+}
+
+query {
+    User(githubLogin: "MoonTahoe"){
+        name
+        avatar
+    }
+    Photo(id: "14TH5B6NS4KIG3H4$"){
+        description
+        url
+    }
+    allPhotos(category: "SELFIE"){
+        name
+        description
+        url
+    }
+}

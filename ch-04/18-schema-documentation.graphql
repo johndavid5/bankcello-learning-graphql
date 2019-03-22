@@ -1,0 +1,47 @@
+"""
+A user who has been authorized by
+GitHub at least once
+"""
+type User {
+    """
+    The user's unique GitHub login
+    """
+    githubLogin: ID!
+
+    """
+    The user's first and last name
+    """
+    name: String
+    ...
+}
+
+
+# arguments comments...
+type Mutation {
+    """
+    Authorizes a GitHub User
+    """
+    githubAuth(
+    "The unique code from GitHub that is sent to
+     authorize the user"
+     code: String!
+    ): AuthPayload!
+}
+
+"""
+The inputs sent with the postPhoto Mutation
+"""
+input PostPhotoInput {
+    "The name of the new photo"
+    name: String!
+    "(optional) A brief description of the photo"
+    description: String
+    "(optional) The category that defines the photo"
+    category: PhotoCategory=PORTRAIT
+}
+
+postPhoto(
+    "input: The name, description, and category
+    for a new photo"
+    input: PostPhotoInput!
+): Photo!

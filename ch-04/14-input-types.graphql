@@ -1,0 +1,36 @@
+# input types: like GraphQL object types
+# except it is used only for input arguments
+
+input PostPhotoInput {
+    name: String!
+    description: String!
+    category: PhotoCategory=PORTRAIT
+}
+
+type Mutation {
+    postPhoto(input: PostPhotoInput!): Photo!
+}
+
+# Example post...
+mutation newPhoto($input: PostPhotoInput!){
+    postPhoto(input: $input){
+        id
+        url
+        created
+    }
+}
+
+# Our input is grouped together in a JSON object
+# and sent along with the mutation in the query 
+# variables under the "input" key.
+#
+# Here, category needs to be a JSON string
+# that matches one of the categories from
+# the PhotoCategory type.
+{
+    "input"{
+        "name": "Hanging at the Arc",
+        "description": "Sunny on the deck of the Arc",
+        "category": "LANDSCAPE"
+    }
+}

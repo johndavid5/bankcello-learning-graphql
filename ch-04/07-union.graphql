@@ -1,0 +1,34 @@
+union AgendaItem = StudyGroup | Workout
+
+# Example: more than two types in a single union:
+# union AgendaItem = Study Group | Workout | Class | Meal | Meeting | FreeTime
+
+type StudyGroup {
+    name: String!
+    subject: String
+    students: [User!]!
+}
+
+type Workout {
+    name: String!
+    reps: Int!
+}
+
+type Query {
+    agenda: [AgendaItem!]!
+}
+
+# Example query of a union...
+query schedule {
+    agenda {
+       ...on Workout {
+            name
+            reps
+       }
+       ...on StudyGroup {
+            name
+            subject
+            students
+       }
+    }
+}

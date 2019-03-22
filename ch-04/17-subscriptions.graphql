@@ -1,0 +1,24 @@
+type Subscription {
+    #newPhoto: Photo!
+    # Subscribe by PhotoCategory...
+    newPhoto(category: PhotoCategory): Photo!
+    newUser: User!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+# Example...subscribe to ACTION photos...
+subscription {
+   newPhoto(category: "ACTION"){ 
+        id
+        name
+        url
+        postedBy {
+            name
+        }
+   }
+}

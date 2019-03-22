@@ -1,0 +1,14 @@
+type User {
+    friends: [Friendship!]!
+}
+
+# Friendship type used to connect friends...
+type Friendship {
+    #friend_a: User!
+    #friend_b: User!
+    # Group of friends who all met at the same
+    # place and same time...
+    friends: [User!]!
+    howLong: Int!
+    whereWeMet: Location    
+}

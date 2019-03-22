@@ -1,0 +1,77 @@
+input PhotoFilter {
+    category: PhotoCategory
+    createdBetween: DateRange
+    taggedUsers: [ID!]
+    searchText: String
+}
+
+input DateRange {
+    start: DateTime!
+    end: DateTime!
+}
+
+input DataPage {
+  first: Int = 25
+  start: Int = 0
+}
+
+input DataSort {
+    sort: SortDirection = DESCENDING
+    sortBy: SortablePhotoField = created
+}
+
+type User {
+    ...
+    postedPhotos(filter: PhotoFitler
+     paging: DataPage
+     sorting: DataSort):
+        [Photo!]!
+
+    inPhotos(filter: PhotoFitler
+     paging: DataPage
+     sorting: DataSort):
+        [Photo!]!
+}
+
+type Photo {
+  ...
+  taggedUsers(sorting: DataSort): [User!]!
+}
+
+type Query {
+    ...
+    allUsers(paging:DataPage
+       sorting:DataSort): [User!]!
+    allPhotos(filter: PhotoFilter
+       paging: DataPage
+       sorting: DataSort): [Photo!]!
+}
+
+# Example Query with optional arguments
+#  $filter, $page, and $sort
+query getPhotos(
+  $filter:PhotoFilter
+  $page:DataPage
+  $sort:DataSort){
+    allPhotos(filter: $filter
+    paging: $page
+    sorting: $sort){
+        id
+        name
+        url
+    }
+}
+
+# Query Variables - in JSON
+{
+    "filter":{
+        "category": "ACTION",
+        "taggedUsers": ["MoonTahoe", "EvePorcello"],
+        "createdBetween: {"start": "2018-11-6",
+            "end": "2018-5-31"
+        }
+    },
+    "page": {
+        "first": 100
+    }
+}

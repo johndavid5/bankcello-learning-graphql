@@ -1,0 +1,47 @@
+type Mutation {
+    postPhoto(
+        name: String!
+        description: String
+        category: PhotoCategory=PORTRAIT
+    ): Photo!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+# Example of posting a photo and
+# selecting information about the
+# photo just posted...e.g., the
+# ID will be created by the database,
+# and the url will automatically be
+# generated... 
+mutation {
+    postPhoto(name: "Sending the Palisades"){
+        id
+        url
+        created
+        postedBy {
+            name
+        }
+    }
+}
+
+# Posting a photo with mutation variables
+# (best practice):
+mutation postPhoto(
+    $name: String!
+    $description: String
+    $category: PhotoCategory
+){
+    postPhoto(
+        name: $name
+        description: $description
+        category: $category
+    ){
+        id
+        name
+        email
+    }
+}
