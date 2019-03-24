@@ -6,7 +6,66 @@ mutation newPhoto {
   postPhoto(name: "sample photo")
 }
 
+# <name and description>
 mutation newPhoto {
-  postPhoto(name: "sample photo", description: "Let off some steam,
-Bennett!")
+  postPhoto(name: "matrix-says-goodbye-to-bennett", description: "\"Let off some steam, Bennett!\"")
 }
+# </name and description>
+
+# <Using Query Variables>
+Query String:
+mutation newPhoto($name: String!, $description: String) {
+  postPhoto(name: $name, description: $description)
+}
+
+Query Variables:
+{
+    "name": "matrix-says-goodbye-to-bennett",
+    "description": "\"Let off some steam, Bennett!\""
+}
+# </Using Query Variables>
+
+# <Type Resolvers>
+# <Add selection set to our mutation>
+mutation newPhoto($name: String!, $description: String ){
+    postPhoto(name: $name, description: $description){
+        id
+        name
+        description
+    }
+}
+
+# NOTE: You'll get an error if you don't supply
+# the selection set...
+
+# Without Query Variables...
+mutation newPhoto{
+    postPhoto(name: "Joe-1", description: "Joe-1 Photo!"){
+        id
+        name
+        description
+    }
+}
+# </Add selection set to our mutation>
+
+# <Add selection set to allPhotos query>
+query listPhotos {
+   allPhotos { 
+      id
+      name
+      description
+   }
+}
+# </Add selection set to allPhotos query>
+
+# <Add url to selection set for allPhotos query>
+query listPhotos {
+   allPhotos { 
+      id
+      name
+      description
+      url
+   }
+}
+# </Add selection set to allPhotos query>
+# </Type Resolvers>
