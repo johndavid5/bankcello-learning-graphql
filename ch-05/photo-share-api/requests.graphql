@@ -1,0 +1,12 @@
+{
+  totalPhotos
+}
+
+mutation newPhoto {
+  postPhoto(name: "sample photo")
+}
+
+mutation newPhoto {
+  postPhoto(name: "sample photo", description: "Let off some steam,
+Bennett!")
+}

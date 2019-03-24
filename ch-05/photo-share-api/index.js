@@ -7,11 +7,32 @@ const typeDefs = `
     type Query {
         totalPhotos: Int!
     }
+
+    type Mutation {
+        postPhoto(
+            name: String! 
+            description: String): Boolean!
+    }
 `
+
+// 2. A data type to store our photos in memory...
+var photos = []
 
 const resolvers = {
     Query: { 
-        totalPhotos: () => 42
+        totalPhotos: () => {
+            console.log(`totalPhotos(): SHEMP: Retoynin' photos.length = ${photos.length}, Moe...`);
+            return photos.length
+        }
+    },
+
+    Mutation: {
+        postPhoto(parent, args){ 
+            console.log(`postPhoto(): SHEMP: parent = `, parent );
+            console.log(`postPhoto(): SHEMP: Pushin' args=${JSON.stringify(args)} onto photos, Moe...`);
+            photos.push(args)
+            return true
+        }
     }
 }
 
@@ -32,25 +53,3 @@ server
         console.log(`GraphQL Service running on ${url}`)
     )
 
-// 5. Easy Peazy Lemon Squeezy.
-
-// A schema describes the data requirements
-// but doesn't perform the work of getting
-// that data.  That work is handled by
-// resolvers.
-//
-// A resolver is a function that returns data for
-// a particular field.  Resolver functions return
-// data in the type and shape specified by the
-// schema.  Resolvers can be asynchronous and
-// can fetch or update date from a REST API,
-// database, or any other service.
-
-// The `typeDefs` variable is where we define
-// our schema.  It's just a string.
-// Whenever we create a query like `totalPhotos`,
-// it should be backed by a resolver function of the
-// same name.  The type definition describes which
-// type the field should return.  The resolver function
-// returns the data of that type from somewhere -- in this
-// case, just a staic value of 42.
