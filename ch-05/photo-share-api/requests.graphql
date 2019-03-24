@@ -25,7 +25,7 @@ Query Variables:
 }
 # </Using Query Variables>
 
-# <Type Resolvers>
+# <5-3-Type Resolvers>
 # <Add selection set to our mutation>
 mutation newPhoto($name: String!, $description: String ){
     postPhoto(name: $name, description: $description){
@@ -68,4 +68,58 @@ query listPhotos {
    }
 }
 # </Add selection set to allPhotos query>
-# </Type Resolvers>
+# </5-3-Type Resolvers>
+
+# <5-4-Inputs-and-Enums>
+mutation newPhoto($input: PostPhotoInput!){
+    postPhoto(input:$input){
+        id
+        name
+        url
+        description
+        category
+    }
+}
+
+Query Variables: 
+{
+    "input": {
+        "name": "Bennett-A",
+        "description": "Photo Bennett-A"  
+    }
+}
+
+# Without Query Variables:
+mutation newPhoto{
+postPhoto(input:{ name: "Bennett-A", description: "Photo Bennett-A"} ){
+        id
+        name
+        url
+        description
+        category
+    }
+}
+
+# With category...
+mutation newPhoto{
+postPhoto(input:{ category: ACTION, name: "Bennett-B", description: "\"Let off some steam, Bennett!\""} ){
+        id
+        name
+        url
+        description
+        category
+    }
+}
+
+# With bad category...
+mutation newPhoto{
+postPhoto(input:{ category: ZLORP, name: "Bennett-B", description: "\"Let off some steam, Bennett!\""} ){
+        id
+        name
+        url
+        description
+        category
+    }
+}
+
+# </5-4-Inputs-and-Enums>
