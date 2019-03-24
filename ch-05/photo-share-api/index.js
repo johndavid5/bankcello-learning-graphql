@@ -14,6 +14,13 @@ const typeDefs = `
         GRAPHIC
     }
 
+    type User {
+        githubLogin: ID!
+        name: String
+        avatar: String
+        postedPhotos: [Photo!]!
+    }
+
     # Add Photo type definition
     type Photo {
         id: ID!
@@ -21,6 +28,7 @@ const typeDefs = `
         name: String!
         description: String
         category: PhotoCategory!
+        postedBy: User!
     }
 
     # Return list of Photo's from allPhotos
@@ -44,8 +52,25 @@ const typeDefs = `
 
 // 1. A variable we'll increment for unique ids...
 var _id = 0
+
 // 2. A data type to store our photos in memory...
-var photos = []
+//var photos = []
+var users = [
+    { "githubLogin": "mHattrup", "name": "Mike Hattrup"},
+    { "githubLogin": "gPlake", "name": "Gwen Plake"},
+    { "githubLogin": "sSchmidt", "name": "Scot Schmidt"},
+];
+
+var photos = [
+    { "id": "1", "name": "Dropping the Heart Chute",
+      "description": "The heart chute is one of my favorite chutes",
+      "category": "ACTION", "githubUser": "gPlake" },
+    { "id": "2", "name": "Enjoying the sunshine",
+      "category": "SELFIE", "githubUser": "sSchmidt" },
+    { "id": "3", "name": "Gunbarrel 25",
+      "description": "25 laps on gunbarrel today",
+      "category": "LANDSCAPE", "githubUser": "sSchmidt" }
+]
 
 const resolvers = {
     Query: { 
@@ -71,12 +96,27 @@ const resolvers = {
         }
     },
 
-    // Create trivial resolver for Photo's url field...
     Photo: { 
         url: parent => {
             let url = `http://johnny.com/img/${parent.id}.jpg` 
             console.log("Photo.url: parent = ", parent, ", returnin' url = ", url ); 
             return url; 
+        },
+        postedBy: parent => {
+            let sWho = "Photo::postedBy";
+            console.log(`${sWho}: SHEMP: parent = `, parent, "...");
+
+            console.log(`${sWho}: SHEMP: Moe, lookin' for findee in users widh' user.githublogin === parent.githubUser === '${parent.githubUser}'...widh users = `, users);
+
+            let findee =  users.find( u => u.githubLogin === parent.githubUser )
+            console.log(`${sWho}(): SHEMP: Moe, retoynin' findee = `, findee );
+            return findee;
+        }
+    },
+
+    User: {
+        postedPhotos: parent => {
+            return photos.filter( p => p.githubUser === parent.githubLogin)
         }
     }
 }

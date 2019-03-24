@@ -112,6 +112,7 @@ postPhoto(input:{ category: ACTION, name: "Bennett-B", description: "\"Let off s
 }
 
 # With bad category...
+# OUTPUT: "message": "Expected type PhotoCategory, found ZLORP."
 mutation newPhoto{
 postPhoto(input:{ category: ZLORP, name: "Bennett-B", description: "\"Let off some steam, Bennett!\""} ){
         id
@@ -123,3 +124,15 @@ postPhoto(input:{ category: ZLORP, name: "Bennett-B", description: "\"Let off so
 }
 
 # </5-4-Inputs-and-Enums>
+
+# <5-5-one-to-many-connections>
+query photos {
+    allPhotos {
+        name
+        url
+        postedBy {
+            name
+        }
+    }
+}
+# </5-5-one-to-many-connections>
