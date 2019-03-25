@@ -136,3 +136,14 @@ query photos {
     }
 }
 # </5-5-one-to-many-connections>
+
+# <5-6-many-to-many-connections>
+query listPhotos {
+    allPhotos {
+        url
+        taggedUsers {
+            name
+        }
+    }
+}
+# </5-6-many-to-many-connections>

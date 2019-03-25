@@ -5,7 +5,7 @@ const { ApolloServer } = require('apollo-server')
 
 const typeDefs = `
 
-    # Add PhotoCategory enum...
+    # PhotoCategory enum...
     enum PhotoCategory {
         SELFIE
         PORTRAIT
@@ -14,14 +14,16 @@ const typeDefs = `
         GRAPHIC
     }
 
+    # User type definition
     type User {
         githubLogin: ID!
         name: String
         avatar: String
         postedPhotos: [Photo!]!
+        inPhotos: [Photo!]!
     }
 
-    # Add Photo type definition
+    # Photo type definition
     type Photo {
         id: ID!
         url: String!
@@ -29,6 +31,7 @@ const typeDefs = `
         description: String
         category: PhotoCategory!
         postedBy: User!
+        taggedUsers: [User!]!
     }
 
     # Return list of Photo's from allPhotos
@@ -37,7 +40,7 @@ const typeDefs = `
         allPhotos: [Photo!]!
     }
 
-    # Add input type PostPhotoInput...
+    # input type PostPhotoInput...
     input PostPhotoInput {
         name: String!
         category: PhotoCategory=PORTRAIT
@@ -71,6 +74,14 @@ var photos = [
       "description": "25 laps on gunbarrel today",
       "category": "LANDSCAPE", "githubUser": "sSchmidt" }
 ]
+
+var tags = [
+  { "photoID": "1", "userID": "gPlake" },
+  { "photoID": "2", "userID": "sSchmidt" },
+  { "photoID": "2", "userID": "mHattrup" },
+  { "photoID": "2", "userID": "gPlake" }
+]
+
 
 const resolvers = {
     Query: { 
@@ -111,13 +122,35 @@ const resolvers = {
             let findee =  users.find( u => u.githubLogin === parent.githubUser )
             console.log(`${sWho}(): SHEMP: Moe, retoynin' findee = `, findee );
             return findee;
-        }
+        },
+        // Lookup taggedUsers in tags[] array...
+        taggedUsers: parent => tags
+        // Return an array of tags that only contain the
+        // current photo
+        .filter( tag => tag.photoID === parent.id )
+        // Converts the array of tags into an
+        // array of userIDs
+        .map( tag => tag.userID )
+        // Converts array of userIDs into an array
+        // of user objects...
+        .map( userID => users.find(u => u.githubLogin === userID ) )
     },
 
     User: {
         postedPhotos: parent => {
             return photos.filter( p => p.githubUser === parent.githubLogin)
-        }
+        },
+        // For inPhotos, look up from tags array...
+        inPhotos: parent => tags
+        // Returns an array of tags that only 
+        // contain the current user
+        .filter( tag => tag.userID === parent.id)
+        // Converts the array of tags into an
+        // array of photoIDs
+        .map( tag => tag.photoID )
+        // Converts array of photoIDs into an
+        // array of photo objects
+        .map( photoID => photos.find( p => p.id === photoID ))
     }
 }
 
