@@ -1,9 +1,12 @@
 // See also: https://www.apollographql.com/docs/apollo-server/essentials/server.html
 
-// 1. Require 'apollo-server'
 const { ApolloServer } = require('apollo-server')
+const { GraphQLScalarType } = require('graphql')
 
 const typeDefs = `
+
+    # Custom scalar...
+    scalar DateTime
 
     # PhotoCategory enum...
     enum PhotoCategory {
@@ -32,12 +35,13 @@ const typeDefs = `
         category: PhotoCategory!
         postedBy: User!
         taggedUsers: [User!]!
+        created: DateTime!
     }
 
     # Return list of Photo's from allPhotos
     type Query {
         totalPhotos: Int!
-        allPhotos: [Photo!]!
+        allPhotos(after: DateTime): [Photo!]!
     }
 
     # input type PostPhotoInput...
@@ -59,20 +63,26 @@ var _id = 0
 // 2. A data type to store our photos in memory...
 //var photos = []
 var users = [
-    { "githubLogin": "mHattrup", "name": "Mike Hattrup"},
+    { "githubLogin": "mHattrup", "name": "Mike Hattrup" },
     { "githubLogin": "gPlake", "name": "Gwen Plake"},
-    { "githubLogin": "sSchmidt", "name": "Scot Schmidt"},
+    { "githubLogin": "sSchmidt", "name": "Scott Schmidt" },
 ];
 
 var photos = [
     { "id": "1", "name": "Dropping the Heart Chute",
       "description": "The heart chute is one of my favorite chutes",
-      "category": "ACTION", "githubUser": "gPlake" },
+      "category": "ACTION", "githubUser": "gPlake",
+      "created": "3-28-1977"
+    },
     { "id": "2", "name": "Enjoying the sunshine",
-      "category": "SELFIE", "githubUser": "sSchmidt" },
+      "category": "SELFIE", "githubUser": "sSchmidt",
+      "created": "1-2-1985"
+    },
     { "id": "3", "name": "Gunbarrel 25",
       "description": "25 laps on gunbarrel today",
-      "category": "LANDSCAPE", "githubUser": "sSchmidt" }
+      "category": "LANDSCAPE", "githubUser": "sSchmidt",
+      "created": "2018-05-15T19:09:57.308Z"
+    }
 ]
 
 var tags = [
@@ -98,7 +108,8 @@ const resolvers = {
             console.log(`postPhoto(): SHEMP: args = `, args );
             var newPhoto = {
                 id: _id++,
-                ...args.input
+                ...args.input,
+                created: new Date()
             }
             console.log(`postPhoto(): SHEMP: Pushin' newPhoto =${JSON.stringify(newPhoto)} onto photos, Moe...`);
             photos.push(newPhoto)
@@ -151,8 +162,46 @@ const resolvers = {
         // Converts array of photoIDs into an
         // array of photo objects
         .map( photoID => photos.find( p => p.id === photoID ))
-    }
-}
+    },
+    DateTime: new GraphQLScalarType({
+        name: 'DateTime',
+        description: 'A valid date time value.',
+        // We want to make sure that the `after`
+        // argument is parsed into a JavaScript `Date`
+        // object before it is sent to the resolver.
+        // We can use the parseValue() function to pare
+        // the values of incoming strings that are sent
+        // along with queries.  Whatever parseValue()
+        // returns is passed to the resolver arguments.
+        parseValue: value => new Date(value),
+        // When we query the photo's `created` field,
+        // we want to make sure that the value returned
+        // by this field contains a string in the ISO date-time
+        // format.  Whenever a field returns a date value, we
+        // serialize() that value as an ISO-formatted string.
+        // The serialize function obtains the field values from
+        // our object, and as long as that field contains a date
+        // formatted as a JavaScript object or any valid `datetime`
+        // string, it will always be returned by GraphQL in the ISO
+        // `datetime` format.
+        serialize: value => new Date(value).toISOString(),
+        // The `after` argument is not being passed as a 
+        // query variable.  Instead, it has been added directly
+        // to the query document.  Before we can parse this value,
+        // we need to obtain it from the query after it has been
+        // parsed into an abstract syntax tree(AST).  
+        // We use the parseLiteral() function to obtain these 
+        // values from the query document before 
+        // they are parsed.
+        // The parseLiteral() function is used to obtain the
+        // value of the date that was added directly to the
+        // query document.  In this case, all we need to do
+        // is return that value, but if needed, we could take
+        // extra parsing steps inside this function.
+        parseLiteral: ast => ast.value
+    })
+
+}/* const resolvers = */
 
 // 2. Create a new instance of the server.
 // 3. Send it an object with typeDefs(the schema) and
