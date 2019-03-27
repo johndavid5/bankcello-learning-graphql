@@ -149,7 +149,7 @@ query listPhotos {
 # </5-6-many-to-many-connections>
 
 # <5-7-custom-scalars>
-# Note: after not implemented
+# Note: after: param not implemented
 query recentPhotos(after:DateTime){
     allPhotos(after: $after){
         name
@@ -172,3 +172,17 @@ query recentPhotos {
     }
 }
 # </5-7-custom-scalars>
+
+# <5-8-apollo-server-express>
+query listPhotos {
+    allPhotos {
+        name
+        description
+        url
+        created
+        taggedUsers {
+            name
+        }
+    }
+}
+# </5-8-apollo-server-express>

@@ -1,7 +1,12 @@
-// See also: https://www.apollographql.com/docs/apollo-server/essentials/server.html
-
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer } = require('apollo-server-express')
 const { GraphQLScalarType } = require('graphql')
+const express = require('express')
+const expressPlayground = require('graphql-playground-middleware-express').default
+
+// routes:
+// (1) / for a homepage
+// (2) /graphql for the GraphQL endpoint
+// (3) /playground for the GraphQL Playground
 
 const typeDefs = `
 
@@ -207,16 +212,32 @@ const resolvers = {
 // 3. Send it an object with typeDefs(the schema) and
 //    resolvers.
 
+// Call `express()` to create an Express application...
+var app = express()
+
 const server = new ApolloServer({
     typeDefs,
     resolvers
 })
 
-// 4. Call listen on the server to
-//    launch the web server.
-server
-    .listen()
-    .then(({url}) => 
-        console.log(`GraphQL Service running on ${url}`)
-    )
+// Call `applyMiddleware` to allow middleware
+// mounted on the same path.
+server.applyMiddleware({ app })
+
+// Create a home route
+app.get('/', (req, res) => res.end('Welcome to the PhotoShare API'))
+
+// Setup playground route at
+// http://localhost:4000/playground
+app.get('/playground', expressPlayground({
+    endpoint: '/graphql' } )
+)
+
+
+// Listen on a specific port...
+const LE_PORT = 4000
+app.listen({port: LE_PORT }, () => 
+    console.log(`GraphQL Server running at http://localhost:${LE_PORT}${server.graphqlPath}...`)
+)
+
 
