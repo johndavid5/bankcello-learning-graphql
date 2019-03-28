@@ -1,0 +1,50 @@
+# Custom scalar...
+scalar DateTime
+
+# PhotoCategory enum...
+enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+}
+
+# User type definition
+type User {
+    githubLogin: ID!
+    name: String
+    avatar: String
+    postedPhotos: [Photo!]!
+    inPhotos: [Photo!]!
+}
+
+# Photo type definition
+type Photo {
+    id: ID!
+    url: String!
+    name: String!
+    description: String
+    category: PhotoCategory!
+    postedBy: User!
+    taggedUsers: [User!]!
+    created: DateTime!
+}
+
+# Return list of Photo's from allPhotos
+type Query {
+    totalPhotos: Int!
+    allPhotos(after: DateTime): [Photo!]!
+}
+
+# input type PostPhotoInput...
+input PostPhotoInput {
+    name: String!
+    category: PhotoCategory=PORTRAIT
+    description: String
+}
+
+# Return the newly posted photo from the mutation
+type Mutation {
+    postPhoto(input: PostPhotoInput!): Photo!
+}
