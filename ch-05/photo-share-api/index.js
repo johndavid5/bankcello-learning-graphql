@@ -11,43 +11,66 @@ const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
 const expressPlayground = require('graphql-playground-middleware-express').default
 
+const { MongoClient } = require('mongodb')
+
+// https://www.npmjs.com/package/dotenv
+// Dotenv is a zero-dependency module that loads
+// environment variables from a .env file into process.env.
+// Storing configuration in the environment separate from code
+// is based on The Twelve-Factor App methodology.
+require('dotenv').config()
+
 const typeDefs = readFileSync('./typeDefs.graphql', 'UTF-8')
-
-
 
 const resolvers = require('./resolvers')
 
+async function start(){
+  // Call `express()` to create an Express application...
+  const app = express(); 
+  const MONGO_DB = process.env.DB_HOST
 
-// 2. Create a new instance of the server.
-// 3. Send it an object with typeDefs(the schema) and
-//    resolvers.
+  console.log(`Connecting to MongoDB at ${MONGO_DB}...`)
+  const client = await MongoClient.connect(
+    MONGO_DB,
+    { useNewUrlParser: true }
+  )
+  console.log(`...done connecting to MongoDB...`)
 
-// Call `express()` to create an Express application...
-var app = express()
+  const db = client.db()
 
-const server = new ApolloServer({
+  const context = { db }
+
+  const server = new ApolloServer({
     typeDefs,
-    resolvers
-})
+    resolvers,
+    context
+  })
 
-// Call `applyMiddleware` to allow middleware
-// mounted on the same path.
-server.applyMiddleware({ app })
+  // Call `applyMiddleware` to allow middleware
+  // mounted on the same path.
+  server.applyMiddleware({ app })
 
-// Create a home route
-app.get('/', (req, res) => res.end('Welcome to the PhotoShare API'))
+  // Create a home route at http://localhost:4000/
+  app.get('/', (req, res) => res.end('Welcome to the PhotoShare API'))
 
-// Setup playground route at
-// http://localhost:4000/playground
-app.get('/playground', expressPlayground({
+  // Setup playground route at
+  // http://localhost:4000/playground
+  app.get('/playground', expressPlayground({
     endpoint: '/graphql' } )
-)
+  )
 
-
-// Listen on a specific port...
-const LE_PORT = 4000
-app.listen({port: LE_PORT }, () => 
+  // Listen on a specific port...
+  //
+  // Setup graphql route at
+  // http://localhost:4000/graphql/
+  const LE_PORT = 4000
+  app.listen({port: LE_PORT }, () => 
     console.log(`GraphQL Server running at http://localhost:${LE_PORT}${server.graphqlPath}...`)
 )
 
+}/* start() */
+
+
+// Invoke start() when ready to start...
+start()
 

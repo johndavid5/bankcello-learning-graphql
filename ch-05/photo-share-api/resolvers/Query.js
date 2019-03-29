@@ -1,10 +1,22 @@
-var context = require('../context'); 
 
 module.exports = {
-        totalPhotos: () => {
-            console.log(`totalPhotos(): SHEMP: Retoynin' photos.length = ${context.photos.length}, Moe...`);
-            return context.photos.length
+        totalPhotos: (parent, args, { db } ) => {
+            let the_count = db.collection('photos').estimatedDocumentCount()
+            console.log(`totalPhotos(): SHEMP: Retoynin' db.collection('photos').estimatedDocumentCount = ${the_count}, Moe...`);
+            return the_count
         },
 
-        allPhotos: () => context.photos
+        allPhotos: (parent, args, { db } ) =>
+            db.collection('photos')
+              .find()
+              .toArray(),
+
+        totalUsers: (parent, args, { db }) => 
+            db.collection('users')
+              .estimatedDocumentCount(),
+
+        allUsers: (parent, args, { db }) => 
+            db.collection('users')
+              .find()
+              .toArray()
 }

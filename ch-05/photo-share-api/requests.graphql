@@ -186,3 +186,30 @@ query listPhotos {
     }
 }
 # </5-8-apollo-server-express>
+
+# <5-9-adding-database-to-context>
+query kitchenSink {
+  totalPhotos 
+  allPhotos {
+        name
+        description
+        url
+        created
+        taggedUsers {
+            name
+        }
+    }
+    totalUsers
+    allUsers {
+      githubLogin
+      name
+      avatar
+      postedPhotos{
+        name
+      }
+      inPhotos{
+        name
+      }
+    }
+}
+# </5-9-adding-database-to-context>
