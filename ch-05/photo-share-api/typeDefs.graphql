@@ -40,6 +40,16 @@ type Query {
     allUsers: [User!]!
 }
 
+# AuthPayload: Used only as a response to
+# authorization mutations.
+#  user: user who was authorized by the mutation
+#  token: token they can use to identify themselves
+#         during future requests...
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
 # input type PostPhotoInput...
 input PostPhotoInput {
     name: String!
@@ -50,4 +60,5 @@ input PostPhotoInput {
 # Return the newly posted photo from the mutation
 type Mutation {
     postPhoto(input: PostPhotoInput!): Photo!
+    githubAuth(code: String!): AuthPayload!
 }
